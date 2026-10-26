@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Sparkles, Check, Layers, Brain, Bot, BarChart3, Palette, Save } from 'lucide-react';
 import { SystemPromptPreset } from '../types';
 import { SYSTEM_PROMPT_PRESETS } from '../utils/presets';
@@ -18,6 +18,12 @@ export const SystemPromptModal: React.FC<SystemPromptModalProps> = ({
 }) => {
   const [promptText, setPromptText] = useState(currentPrompt);
   const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setPromptText(currentPrompt);
+    }
+  }, [isOpen, currentPrompt]);
 
   if (!isOpen) return null;
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   X,
   Key,
@@ -49,7 +49,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     latency?: number;
   }>({ loading: false });
 
-  if (!isOpen) return null;
+  // Sync local settings whenever modal opens or parent settings prop updates
+  useEffect(() => {
+    if (isOpen) {
+      setLocalSettings({ ...settings });
+      setTestStatus({ loading: false });
+      setFetchMessage(null);
+    }
+  }, [isOpen, settings]);
 
   const handleTestConnection = async () => {
     setTestStatus({ loading: true });
@@ -158,6 +165,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
       m.description.toLowerCase().includes(modelSearch.toLowerCase());
     return matchesCategory && matchesSearch;
   });
+
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4 overflow-y-auto">
